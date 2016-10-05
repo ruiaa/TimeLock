@@ -21,7 +21,7 @@ android {
             debuggable true
         }
     }
-    //开启数据绑定
+
     dataBinding {
         enabled = true
     }
@@ -30,6 +30,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
     }
 }
 
@@ -43,26 +47,31 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testCompile 'junit:junit:4.12'
 
     //UI
+    
+
+    //Rx
+    //compile 'com.trello:rxlifecycle:0.8.0'
+
+
+
+
+
+
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'com.android.support:support-v4:24.2.0'
     compile 'com.android.support:design:24.2.0'
-
-    //Rx
+    compile 'com.jakewharton:butterknife:8.4.0'
     compile 'io.reactivex:rxjava:1.1.6'
     compile 'io.reactivex:rxandroid:1.2.1'
-    //compile 'com.trello:rxlifecycle:0.8.0'
     compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
-
-
-    //性能监控组件
-    debugCompile 'com.github.markzhai:blockcanary-android:1.3.1'
-    releaseCompile 'com.github.markzhai:blockcanary-no-op:1.3.1'
-
-    //内存泄漏检测组件
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    testCompile 'junit:junit:4.12'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    debugCompile 'com.github.markzhai:blockcanary-android:1.3.1'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.github.markzhai:blockcanary-no-op:1.3.1'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 }
+
+

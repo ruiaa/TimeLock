@@ -11,6 +11,7 @@ import com.ruiaa.timelock.common.utils.Pair;
 import com.ruiaa.timelock.main.entity.AppInfo;
 import com.ruiaa.timelock.main.entity.Lock;
 import com.ruiaa.timelock.main.entity.TimeLimit;
+import com.ruiaa.timelock.main.model.cp.DataMainContentResolver;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,10 +27,39 @@ public class AppInfoProvider {
 
     private DataMain dataMain;
 
+
+    //
+    // 限定底层实现 DataMainContentResolver
+    private static AppInfoProvider instance = null;
+
+    private AppInfoProvider() {
+        dataMain = DataMainContentResolver.getInstance();
+    }
+
+    public static AppInfoProvider getInstance() {
+        if (instance == null) {
+            synchronized (AppInfoProvider.class) {
+                if (instance == null) {
+                    instance = new AppInfoProvider();
+                }
+            }
+        }
+        return instance;
+    }
+
+
+    //
+    //
+    //自定接口的底层实现
     public AppInfoProvider(DataMain dataMain) {
         this.dataMain = dataMain;
     }
 
+
+    //
+    //
+    //
+    //
     public AppInfo getTheApp(String packageName) {
         AppInfo appInfo = null;
         Cursor cursor = null;
@@ -222,18 +252,18 @@ public class AppInfoProvider {
         ContentValues contentValues;
         contentValues = new ContentValues();
         contentValues.put(SqlField.LIMIT_STATE, timeLimit.getLimitState() ? AppCode.LIMIT_STATE_OPEN : AppCode.LIMIT_STATE_CLOSE);
-        contentValues.put(SqlField.LIMIT_MONDAY,timeLimit.getMonLimit());
-        contentValues.put(SqlField.LIMIT_TUESDAY,timeLimit.getTueLimit());
-        contentValues.put(SqlField.LIMIT_WEDNESDAY,timeLimit.getWedLimit());
-        contentValues.put(SqlField.LIMIT_THURSDAY,timeLimit.getThuLimit());
-        contentValues.put(SqlField.LIMIT_FRIDAY,timeLimit.getFriLimit());
-        contentValues.put(SqlField.LIMIT_SATURDAY,timeLimit.getSatLimit());
-        contentValues.put(SqlField.LIMIT_SUNDAY,timeLimit.getSunLimit());
+        contentValues.put(SqlField.LIMIT_MONDAY, timeLimit.getMonLimit());
+        contentValues.put(SqlField.LIMIT_TUESDAY, timeLimit.getTueLimit());
+        contentValues.put(SqlField.LIMIT_WEDNESDAY, timeLimit.getWedLimit());
+        contentValues.put(SqlField.LIMIT_THURSDAY, timeLimit.getThuLimit());
+        contentValues.put(SqlField.LIMIT_FRIDAY, timeLimit.getFriLimit());
+        contentValues.put(SqlField.LIMIT_SATURDAY, timeLimit.getSatLimit());
+        contentValues.put(SqlField.LIMIT_SUNDAY, timeLimit.getSunLimit());
 
         try {
             dataMain.update(SqlField.TABLE_APP_INFO, contentValues, SqlField.PACKAGE + "='" + packageName + "'", null);
         } catch (Exception e) {
-            LogUtil.e("updateTimeLimit#",e);
+            LogUtil.e("updateTimeLimit#", e);
         }
     }
 
@@ -244,32 +274,32 @@ public class AppInfoProvider {
                 SqlField.REPEAT_THURSDAY, SqlField.REPEAT_FRIDAY, SqlField.REPEAT_SATURDAY, SqlField.REPEAT_SUNDAY,
                 SqlField.LOCK_START_TIME, SqlField.LOCK_FINISH_TIME};
         List<Lock> list = new ArrayList<>();
-        Cursor cursor=null;
+        Cursor cursor = null;
         try {
             cursor = dataMain.query(SqlField.TABLE_LOCK, strings,
                     SqlField.PACKAGE + "='" + packageName + "'", null, SqlField.LOCK_ORDER + " asc");
             if (cursor != null && cursor.moveToFirst()) {
                 do {
-                    Lock lock=new Lock(packageName,cursor.getInt(cursor.getColumnIndex(SqlField.LOCK_ORDER)));
+                    Lock lock = new Lock(packageName, cursor.getInt(cursor.getColumnIndex(SqlField.LOCK_ORDER)));
                     lock.setType(cursor.getInt(cursor.getColumnIndex(SqlField.LOCK_TYPE)))
                             .setStartTime(cursor.getInt(cursor.getColumnIndex(SqlField.LOCK_START_TIME)))
                             .setFinishTime(cursor.getInt(cursor.getColumnIndex(SqlField.LOCK_FINISH_TIME)))
-                            .setMonRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_MONDAY))==AppCode.LOCK_STATE_OPEN)
-                            .setTueRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_TUESDAY))==AppCode.LOCK_STATE_OPEN)
-                            .setWedRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_WEDNESDAY))==AppCode.LOCK_STATE_OPEN)
-                            .setThuRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_THURSDAY))==AppCode.LOCK_STATE_OPEN)
-                            .setFriRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_FRIDAY))==AppCode.LOCK_STATE_OPEN)
-                            .setSatRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_SATURDAY))==AppCode.LOCK_STATE_OPEN)
-                            .setSunRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_SUNDAY))==AppCode.LOCK_STATE_OPEN);
+                            .setMonRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_MONDAY)) == AppCode.LOCK_STATE_OPEN)
+                            .setTueRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_TUESDAY)) == AppCode.LOCK_STATE_OPEN)
+                            .setWedRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_WEDNESDAY)) == AppCode.LOCK_STATE_OPEN)
+                            .setThuRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_THURSDAY)) == AppCode.LOCK_STATE_OPEN)
+                            .setFriRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_FRIDAY)) == AppCode.LOCK_STATE_OPEN)
+                            .setSatRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_SATURDAY)) == AppCode.LOCK_STATE_OPEN)
+                            .setSunRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_SUNDAY)) == AppCode.LOCK_STATE_OPEN);
                     list.add(lock);
 
                 } while (cursor.moveToNext());
             }
 
         } catch (Exception e) {
-            LogUtil.e("getLock#",e);
-        }finally {
-            if (cursor!=null){
+            LogUtil.e("getLock#", e);
+        } finally {
+            if (cursor != null) {
                 cursor.close();
             }
         }
@@ -277,37 +307,37 @@ public class AppInfoProvider {
     }
 
     public List<Lock> getAllLock() {
-        String[] strings = {SqlField.PACKAGE ,SqlField.LOCK_TYPE, SqlField.LOCK_ORDER,
+        String[] strings = {SqlField.PACKAGE, SqlField.LOCK_TYPE, SqlField.LOCK_ORDER,
                 SqlField.REPEAT_MONDAY, SqlField.REPEAT_TUESDAY, SqlField.REPEAT_WEDNESDAY,
                 SqlField.REPEAT_THURSDAY, SqlField.REPEAT_FRIDAY, SqlField.REPEAT_SATURDAY, SqlField.REPEAT_SUNDAY,
                 SqlField.LOCK_START_TIME, SqlField.LOCK_FINISH_TIME};
         List<Lock> list = new ArrayList<>();
-        Cursor cursor=null;
+        Cursor cursor = null;
         try {
             cursor = dataMain.query(SqlField.TABLE_LOCK, strings,
                     null, null, SqlField.LOCK_ORDER + " asc");
             if (cursor != null && cursor.moveToFirst()) {
                 do {
-                    Lock lock=new Lock(cursor.getString(cursor.getColumnIndex(SqlField.PACKAGE)),cursor.getInt(cursor.getColumnIndex(SqlField.LOCK_ORDER)));
+                    Lock lock = new Lock(cursor.getString(cursor.getColumnIndex(SqlField.PACKAGE)), cursor.getInt(cursor.getColumnIndex(SqlField.LOCK_ORDER)));
                     lock.setType(cursor.getInt(cursor.getColumnIndex(SqlField.LOCK_TYPE)))
                             .setStartTime(cursor.getInt(cursor.getColumnIndex(SqlField.LOCK_START_TIME)))
                             .setFinishTime(cursor.getInt(cursor.getColumnIndex(SqlField.LOCK_FINISH_TIME)))
-                            .setMonRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_MONDAY))==AppCode.LOCK_STATE_OPEN)
-                            .setTueRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_TUESDAY))==AppCode.LOCK_STATE_OPEN)
-                            .setWedRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_WEDNESDAY))==AppCode.LOCK_STATE_OPEN)
-                            .setThuRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_THURSDAY))==AppCode.LOCK_STATE_OPEN)
-                            .setFriRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_FRIDAY))==AppCode.LOCK_STATE_OPEN)
-                            .setSatRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_SATURDAY))==AppCode.LOCK_STATE_OPEN)
-                            .setSunRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_SUNDAY))==AppCode.LOCK_STATE_OPEN);
+                            .setMonRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_MONDAY)) == AppCode.LOCK_STATE_OPEN)
+                            .setTueRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_TUESDAY)) == AppCode.LOCK_STATE_OPEN)
+                            .setWedRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_WEDNESDAY)) == AppCode.LOCK_STATE_OPEN)
+                            .setThuRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_THURSDAY)) == AppCode.LOCK_STATE_OPEN)
+                            .setFriRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_FRIDAY)) == AppCode.LOCK_STATE_OPEN)
+                            .setSatRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_SATURDAY)) == AppCode.LOCK_STATE_OPEN)
+                            .setSunRepeat(cursor.getInt(cursor.getColumnIndex(SqlField.REPEAT_SUNDAY)) == AppCode.LOCK_STATE_OPEN);
                     list.add(lock);
 
                 } while (cursor.moveToNext());
             }
 
         } catch (Exception e) {
-            LogUtil.e("getLock#",e);
-        }finally {
-            if (cursor!=null){
+            LogUtil.e("getLock#", e);
+        } finally {
+            if (cursor != null) {
                 cursor.close();
             }
         }
@@ -316,51 +346,15 @@ public class AppInfoProvider {
 
     public List<String> getCurrentForbiddenLockList() {
 
-        List<String> list=new ArrayList<>();
-        int currentTime=DataConvert.time(Calendar.getInstance());
-        String currentWeek=SqlField.getCurrentLockRepeatWeek();
+        List<String> list = new ArrayList<>();
+        int currentTime = DataConvert.time(Calendar.getInstance());
+        String currentWeek = SqlField.getCurrentLockRepeatWeek();
 
         String[] strings = {SqlField.PACKAGE};
-        Cursor cursor=null;
+        Cursor cursor = null;
         try {
             cursor = dataMain.query(SqlField.TABLE_LOCK, strings,
-                    SqlField.LOCK_TYPE + "=" + AppCode.LOCK_TYPE_FORBIDDEN+ " and " +
-                            SqlField.LOCK_START_TIME + " < " + currentTime + " and " +
-                            SqlField.LOCK_FINISH_TIME + " > " + currentTime + " and " +
-                            "(" + currentWeek + "=1 " + " or " + SqlField.LOCK_REPEAT + "=0 )",
-                    null, SqlField.LOCK_ORDER + " desc");
-
-            if (cursor != null && cursor.moveToFirst()) {
-                do {
-                     String packageName = cursor.getString(cursor.getColumnIndex(SqlField.PACKAGE));
-                    if (list.contains(packageName)) {
-                        //已经包含
-                    } else {
-                        list.add(packageName);
-                    }
-                } while (cursor.moveToNext());
-            }
-
-        } catch (Exception e) {
-            LogUtil.e("getCurrentForbiddenLockList#",e);
-        }finally {
-            if (cursor!=null){
-                cursor.close();
-            }
-        }
-        return list;
-    }
-
-    public List<String> getCurrentUseLockList() {
-        List<String> list=new ArrayList<>();
-        int currentTime=DataConvert.time(Calendar.getInstance());
-        String currentWeek=SqlField.getCurrentLockRepeatWeek();
-
-        String[] strings = {SqlField.PACKAGE};
-        Cursor cursor=null;
-        try {
-            cursor = dataMain.query(SqlField.TABLE_LOCK, strings,
-                    SqlField.LOCK_TYPE + "=" + AppCode.LOCK_TYPE_USE+ " and " +
+                    SqlField.LOCK_TYPE + "=" + AppCode.LOCK_TYPE_FORBIDDEN + " and " +
                             SqlField.LOCK_START_TIME + " < " + currentTime + " and " +
                             SqlField.LOCK_FINISH_TIME + " > " + currentTime + " and " +
                             "(" + currentWeek + "=1 " + " or " + SqlField.LOCK_REPEAT + "=0 )",
@@ -378,9 +372,45 @@ public class AppInfoProvider {
             }
 
         } catch (Exception e) {
-            LogUtil.e("getCurrentForbiddenLockList#",e);
-        }finally {
-            if (cursor!=null){
+            LogUtil.e("getCurrentForbiddenLockList#", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return list;
+    }
+
+    public List<String> getCurrentUseLockList() {
+        List<String> list = new ArrayList<>();
+        int currentTime = DataConvert.time(Calendar.getInstance());
+        String currentWeek = SqlField.getCurrentLockRepeatWeek();
+
+        String[] strings = {SqlField.PACKAGE};
+        Cursor cursor = null;
+        try {
+            cursor = dataMain.query(SqlField.TABLE_LOCK, strings,
+                    SqlField.LOCK_TYPE + "=" + AppCode.LOCK_TYPE_USE + " and " +
+                            SqlField.LOCK_START_TIME + " < " + currentTime + " and " +
+                            SqlField.LOCK_FINISH_TIME + " > " + currentTime + " and " +
+                            "(" + currentWeek + "=1 " + " or " + SqlField.LOCK_REPEAT + "=0 )",
+                    null, SqlField.LOCK_ORDER + " desc");
+
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    String packageName = cursor.getString(cursor.getColumnIndex(SqlField.PACKAGE));
+                    if (list.contains(packageName)) {
+                        //已经包含
+                    } else {
+                        list.add(packageName);
+                    }
+                } while (cursor.moveToNext());
+            }
+
+        } catch (Exception e) {
+            LogUtil.e("getCurrentForbiddenLockList#", e);
+        } finally {
+            if (cursor != null) {
                 cursor.close();
             }
         }
@@ -388,28 +418,28 @@ public class AppInfoProvider {
     }
 
 
-    public void addLock(Lock lock){
+    public void addLock(Lock lock) {
         try {
             dataMain.insert(SqlField.TABLE_LOCK, lock.toContentValues(lock));
         } catch (Exception e) {
-            LogUtil.e("addLock#",e);
+            LogUtil.e("addLock#", e);
         }
     }
 
-    public void updateLock(Lock lock){
+    public void updateLock(Lock lock) {
         try {
             dataMain.update(SqlField.TABLE_LOCK, lock.toContentValues(lock),
-                    SqlField.PACKAGE+"='"+lock.getPackageName()+"'",null);
+                    SqlField.LOCK_ORDER + "=" + lock.getOrder(), null);
         } catch (Exception e) {
-            LogUtil.e("updateLock#",e);
+            LogUtil.e("updateLock#", e);
         }
     }
 
-    public void deleteLock(int order) {
+    public void deleteLock(Lock lock) {
         try {
-            dataMain.delete(SqlField.TABLE_LOCK, SqlField.LOCK_ORDER + "=" +order, null);
+            dataMain.delete(SqlField.TABLE_LOCK, SqlField.LOCK_ORDER + "=" + lock.getOrder(), null);
         } catch (Exception e) {
-            LogUtil.e("deleteLock#",e);
+            LogUtil.e("deleteLock#", e);
         }
     }
 

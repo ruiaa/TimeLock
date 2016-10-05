@@ -16,11 +16,11 @@ import com.ruiaa.timelock.common.consts.SqlField;
 public class Lock extends BaseObservable {
 
     private String packageName;
+    private int order=-1;
 
     private int startTime=0;
     private int finishTime=0;
     private int type= AppCode.LOCK_TYPE_FORBIDDEN;
-    private int order=-1;
 
     private boolean monRepeat=false;
     private boolean tueRepeat=false;
@@ -30,17 +30,20 @@ public class Lock extends BaseObservable {
     private boolean satRepeat=false;
     private boolean sunRepeat=false;
 
-    private int monLimit;
 
+    //新建
     public Lock(String packageName){
         this.packageName=packageName;
     }
 
+    //数据库读取
     public Lock(String packageName,int order){
         this.packageName=packageName;
         this.order=order;
     }
 
+    //
+    //
     public ContentValues toContentValues(Lock lock){
         boolean weekRepeat=lock.getMonRepeat()||lock.getTueRepeat()||lock.getWedRepeat()
                 ||lock.getThuRepeat() ||lock.getFriRepeat() ||lock.getSatRepeat()||lock.getSunRepeat();
@@ -48,9 +51,11 @@ public class Lock extends BaseObservable {
         ContentValues contentValues;
         contentValues = new ContentValues();
         contentValues.put(SqlField.PACKAGE, lock.getPackageName());
+
         contentValues.put(SqlField.LOCK_TYPE, lock.getType());
         contentValues.put(SqlField.LOCK_START_TIME, lock.getStartTime());
         contentValues.put(SqlField.LOCK_FINISH_TIME, lock.getFinishTime());
+
         contentValues.put(SqlField.LOCK_REPEAT, weekRepeat);
         contentValues.put(SqlField.REPEAT_MONDAY, lock.getMonRepeat());
         contentValues.put(SqlField.REPEAT_TUESDAY, lock.getTueRepeat());
@@ -63,8 +68,28 @@ public class Lock extends BaseObservable {
         return contentValues;
     }
 
+    public void copySettingTo(Lock target){
+        target.setStartTime(startTime);
+        target.setFinishTime(finishTime);
+        target.setType(type);
+        target.setMonRepeat(monRepeat);
+        target.setTueRepeat(tueRepeat);
+        target.setWedRepeat(wedRepeat);
+        target.setThuRepeat(thuRepeat);
+        target.setFriRepeat(friRepeat);
+        target.setSatRepeat(satRepeat);
+        target.setSunRepeat(sunRepeat);
+    }
+
+    //
+    //
+
     public String getPackageName() {
         return packageName;
+    }
+
+    public int getOrder() {
+        return order;
     }
 
     @Bindable
@@ -177,7 +202,8 @@ public class Lock extends BaseObservable {
         return this;
     }
 
-    public int getOrder() {
-        return order;
+    public boolean getWeekRepeat(){
+        return monRepeat||tueRepeat||wedRepeat||thuRepeat||friRepeat||satRepeat||sunRepeat;
     }
+
 }

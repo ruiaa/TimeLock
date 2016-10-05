@@ -136,6 +136,7 @@ public class AppManager {
         } finally {
             dataCom.endTransaction();
         }
+
     }
 
     public void firstUpdateApp() {

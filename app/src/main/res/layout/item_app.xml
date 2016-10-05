@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="appInfo"
+            type="com.ruiaa.timelock.main.entity.AppInfo"/>
+
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:tag="@{appInfo.packageName}"
+        >
+
+        <ImageView
+            android:id="@+id/item_app_icon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@{appInfo.icon}"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/item_app_icon"
+            android:textAlignment="center"
+            android:text="@{appInfo.appName}"
+            />
+
+    </RelativeLayout>
+
+</layout>

@@ -60,4 +60,9 @@ public class DataConvert {
     public static int time(int hour, int minute, int second) {
         return hour * 10000 + minute * 100 + second;
     }
+
+    public static String time(int time) {
+        return String.valueOf(time / 10000) + ":"
+                + String.valueOf((time % 10000) / 100);
+    }
 }

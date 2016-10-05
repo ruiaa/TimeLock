@@ -31,6 +31,78 @@ public class SPUtils {
     }
 
     /**
+     * @param map 键--值
+     * @return 返回成功保存的键--值条数
+     */
+    public int putMap(Map<Object,Object> map){
+        int count=0;
+        if (map==null||map.isEmpty()){
+            return count;
+        }else {
+            count=map.size();
+        }
+        Object key;
+        Object value;
+        for (Map.Entry<Object,Object> entry:map.entrySet()) {
+            key=entry.getKey();
+            value=entry.getValue();
+            if (value instanceof String){
+                editor.putString(key.toString(),(String)value);
+            }else if (value instanceof Integer){
+                editor.putInt(key.toString(),(int)value);
+            }else if (value instanceof Boolean){
+                editor.putBoolean(key.toString(),(boolean)value);
+            }else if (value instanceof Long){
+                editor.putLong(key.toString(),(long)value);
+            }else if (value instanceof Float){
+                editor.putFloat(key.toString(),(float)value);
+            }else if (value instanceof Double){
+                editor.putFloat(key.toString(),(float)value);
+            }else if (value instanceof Short){
+                editor.putInt(key.toString(),(int)value);
+            }else if (value instanceof Byte){
+                editor.putInt(key.toString(),(int)value);
+            }else if (value instanceof Character){
+                editor.putString(key.toString(),(String)value);
+            }else {
+                count=count-1;
+            }
+        }
+        editor.apply();
+        return count;
+    }
+
+    /**
+     * @param key 键
+     * @param value 值
+     * @return 成功保存返回true
+     */
+    public boolean putObject(Object key,Object value){
+        if (value instanceof String){
+            editor.putString(key.toString(),(String)value).apply();
+        }else if (value instanceof Integer){
+            editor.putInt(key.toString(),(int)value).apply();
+        }else if (value instanceof Boolean){
+            editor.putBoolean(key.toString(),(boolean)value).apply();
+        }else if (value instanceof Long){
+            editor.putLong(key.toString(),(long)value).apply();
+        }else if (value instanceof Float){
+            editor.putFloat(key.toString(),(float)value).apply();
+        }else if (value instanceof Double){
+            editor.putFloat(key.toString(),(float)value).apply();
+        }else if (value instanceof Short){
+            editor.putInt(key.toString(),(int)value).apply();
+        }else if (value instanceof Byte){
+            editor.putInt(key.toString(),(int)value).apply();
+        }else if (value instanceof Character){
+            editor.putString(key.toString(),(String)value).apply();
+        }else {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * SP中写入String类型value
      *
      * @param key   键

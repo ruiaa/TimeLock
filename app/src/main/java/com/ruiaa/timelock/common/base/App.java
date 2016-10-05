@@ -3,9 +3,7 @@ package com.ruiaa.timelock.common.base;
 import android.app.Application;
 import android.content.Context;
 
-import com.github.moduth.blockcanary.BlockCanary;
-import com.ruiaa.timelock.common.bind.BaseCS;
-import com.squareup.leakcanary.LeakCanary;
+import com.ruiaa.timelock.common.utils.LogUtil;
 
 /**
  * Created by ruiaa on 2016/9/29.
@@ -14,23 +12,25 @@ import com.squareup.leakcanary.LeakCanary;
 public class App extends Application{
 
     private static Context context;
-    public static BaseCS cs=new BaseCS();
+
 
     @Override
     public void onCreate() {
 
         //初始化组件
-        LeakCanary.install(this);
-        BlockCanary.install(this, new AppBlockCanaryContext()).start();
-
+        //LeakCanary.install(this);
+        //BlockCanary.install(this, new AppBlockCanaryContext()).start();
 
         //
         context=getApplicationContext();
+
+        LogUtil.i("onCreate--");
     }
 
 
     public static Context getAppContext(){
         return context;
     }
+
 
 }

@@ -1,4 +1,4 @@
-package com.ruiaa.timelock.common.bind;
+package com.ruiaa.timelock.common.bind.messenger;
 
 /**
  * Created by ruiaa on 2016/9/30.

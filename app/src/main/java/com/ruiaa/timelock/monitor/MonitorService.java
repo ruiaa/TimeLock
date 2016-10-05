@@ -2,18 +2,22 @@ package com.ruiaa.timelock.monitor;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
 
 import com.ruiaa.timelock.common.base.App;
 import com.ruiaa.timelock.common.base.BaseService;
-import com.ruiaa.timelock.common.bind.BaseCS;
+import com.ruiaa.timelock.common.bind.aidl.AIDLMainMonitor;
+import com.ruiaa.timelock.common.bind.aidl.Config;
 import com.ruiaa.timelock.common.component.RxBus;
 import com.ruiaa.timelock.common.consts.ConfigCode;
+import com.ruiaa.timelock.common.utils.LogUtil;
 import com.ruiaa.timelock.common.utils.SPUtils;
-import com.ruiaa.timelock.main.modules.MainActivity;
+import com.ruiaa.timelock.main.modules.lock.ui.LockActivity;
 import com.ruiaa.timelock.monitor.event.DateChangeEvent;
 import com.ruiaa.timelock.monitor.event.ScreenChangeEvent;
 import com.ruiaa.timelock.monitor.modules.AppManager;
@@ -30,22 +34,19 @@ import java.util.concurrent.TimeUnit;
 public class MonitorService extends BaseService {
 
     public static final String SPFileName = "MonitorConfig";
-    public static final Class INTERCEPT_ACTIVITY = MainActivity.class;
-
-    public static String TodayDate;
+    public static final Class INTERCEPT_ACTIVITY = LockActivity.class;
 
     //本地储存 Config
+    public static String TodayDate;                             //数据库当前日期
     public static float Monitor_Interval = 0.1F;                //监控间隔 0.1 ~~ 10 秒
-
     public static int Intercept_Interval = 60;               //拦截间隔  60~~600 秒
-    public static String LauncherPackage;                    //桌面
+    public static String LauncherPackage = "0";                    //桌面
     public static boolean AllLockIsOpen = true;               //打开锁
 
     //运行时状态
     public static boolean ScreenIsLight = true;              //屏幕亮
 
 
-    BaseCS server;
     SPUtils spUtils;
     AppManager appManager;
     DateManager dateManager;
@@ -62,11 +63,13 @@ public class MonitorService extends BaseService {
         new Thread(() -> {
             prepare();
             getModules();
+            LogUtil.i("MonitorService--ready");
             front();
             update();
             handleBusMsg();
-            handleCSMsg();;
-        });
+            LogUtil.i("MonitorService--monitor");
+        }).start();
+        LogUtil.i("MonitorService--onCreate");
     }
 
     @Override
@@ -74,16 +77,21 @@ public class MonitorService extends BaseService {
         super.onDestroy();
         Intent startService = new Intent(App.getAppContext(), MonitorService.class);
         startService(startService);
+        LogUtil.i("onDestroy--");
     }
 
     private void prepare() {
         spUtils = new SPUtils(this, SPFileName);
-
+        Monitor_Interval = spUtils.getFloat(ConfigCode.MONITOR_INTERVAL, 0.1F);
+        Intercept_Interval = spUtils.getInt(ConfigCode.INTERCEPT_INTERVAL, 60);
+        LauncherPackage = spUtils.getString(ConfigCode.LAUNCHER_PKG, "0");
+        AllLockIsOpen = spUtils.getBoolean(ConfigCode.ALL_LOCK_OPEN, true);
         TodayDate = spUtils.getString(ConfigCode.DATE_TODAY, "0");
 
     }
 
     private void getModules() {
+
 
         appManager = AppManager.getAppManager();
 
@@ -132,16 +140,17 @@ public class MonitorService extends BaseService {
             scheduleFront = null;
         }
         scheduleFront = Executors.newSingleThreadScheduledExecutor();
-        Runnable frontR = frontR = () -> {
+        Runnable frontR = () -> {
             if (ScreenIsLight) {
                 String frontPkg = frontMonitor.getFrontAppPkg();
                 usageRecord.record(frontPkg);
                 if (!frontPkg.equals("com.ruiaa.timelock")) {
                     lockHandle.judgeLock(frontPkg);
                 }
+                //LogUtil.d("front--" + frontPkg);
             }
         };
-        scheduleFront.scheduleAtFixedRate(frontR, 0, (long) (Monitor_Interval * 1000), TimeUnit.MILLISECONDS);
+        scheduleFront.scheduleAtFixedRate(frontR, 0L, (long) (Monitor_Interval * 1000), TimeUnit.MILLISECONDS);
     }
 
     private void update() {
@@ -153,6 +162,7 @@ public class MonitorService extends BaseService {
         Runnable updateR = updateR = () -> {
             appManager.updateApp();
             usageRecord.saveAll();
+            LogUtil.d("update--");
         };
         scheduleUpdate.scheduleAtFixedRate(updateR, 0, 10L, TimeUnit.MINUTES);
     }
@@ -174,17 +184,23 @@ public class MonitorService extends BaseService {
 
     }
 
-    private void handleCSMsg(){
-        App.cs.setMsgHandler((msg)->{
-            switch (msg.what){
+    private Binder binder = new AIDLMainMonitor.Stub() {
+        @Override
+        public Config getConfig() throws RemoteException {
+            Config config = new Config();
+            return config;
+        }
 
-            }
-        });
-    }
+        @Override
+        public boolean saveConfig(Config config) throws RemoteException {
+            return true;
+        }
+    };
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return App.cs.getIBinder();
+        LogUtil.i("onBind--");
+        return binder;
     }
 }

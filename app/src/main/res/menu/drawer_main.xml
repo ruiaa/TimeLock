@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+        <item
+            android:id="@+id/drawer_lock"
+            android:icon="@android:drawable/ic_secure"
+            android:title="@string/lock" />
+        <item
+            android:id="@+id/drawer_usage"
+            android:icon="@android:drawable/ic_dialog_dialer"
+            android:title="@string/usage" />
+
+        <item
+            android:id="@+id/drawer_setting"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/setting" />
+        <item
+            android:id="@+id/drawer_about"
+            android:icon="@android:drawable/ic_menu_more"
+            android:title="@string/about" />
+
+
+</menu>

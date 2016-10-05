@@ -29,8 +29,8 @@ public class DataProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
+        dataCom = DataComSqlite.getInstance(getContext());
         LogUtil.i("DataProvider  create");
-        dataCom = DataComSqlite.getInstance();
         return true;
     }
 

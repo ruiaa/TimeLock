@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <data>
+
+        <import type="com.ruiaa.timelock.common.consts.AppCode"/>
+
+        <import type="com.ruiaa.timelock.common.utils.DataConvert"/>
+
+        <variable
+            name="lock"
+            type="com.ruiaa.timelock.main.entity.Lock"
+            />
+
+        <variable
+            name="lockFragmentModel"
+            type="com.ruiaa.timelock.main.modules.lock.viewmodel.LockFragmentModel"
+            />
+    </data>
+
+<!--    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="4dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@{(lock.type==AppCode.LOCK_TYPE_FORBIDDEN ? @string/lock_forbidden : @string/lock_use)+DataConvert.date(lock.startTime)+`-&#45;&#45;&#45;&#45;`+DataConvert.date(lock.finishTime)}"
+                tools:text="禁用"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@{DataConvert.date(lock.startTime)}"
+                android:textAlignment="center"
+                tools:text="00:00:00"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="-&#45;&#45;&#45;&#45;"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@{DataConvert.date(lock.finishTime)}"
+                android:textAlignment="center"
+                tools:text="23:59:59"/>
+
+            <Button
+                android:id="@+id/lock_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="@{() -> lockFragmentModel.deleteLock(lock)}"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@{(lock.monRepeat? @string/monday: ``)+(lock.tueRepeat? @string/tuesday: ``) +(lock.wedRepeat? @string/wednesday: ``)+(lock.thuRepeat? @string/thursday: ``)+(lock.friRepeat? @string/friday: ``)+(lock.satRepeat? @string/saturday: ``)+(lock.sunRepeat? @string/sunday: ``)}"
+                />
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@{lock.monRepeat?@color/selected:@color/un_selected}"
+                android:gravity="center"
+                android:text="@string/monday"/>
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@{lock.tueRepeat?@color/selected:@color/un_selected}"
+                android:gravity="center"
+                android:text="@string/tuesday"/>
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@{lock.wedRepeat?@color/selected:@color/un_selected}"
+                android:gravity="center"
+                android:text="@string/wednesday"/>
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@{lock.thuRepeat?@color/selected:@color/un_selected}"
+                android:gravity="center"
+                android:text="@string/thursday"/>
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@{lock.friRepeat?@color/selected:@color/un_selected}"
+                android:gravity="center"
+                android:text="@string/friday"/>
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@{lock.satRepeat?@color/selected:@color/un_selected}"
+                android:gravity="center"
+                android:text="@string/saturday"/>
+
+            <TextView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:background="@{lock.sunRepeat?@color/selected:@color/un_selected}"
+                android:gravity="center"
+                android:text="@string/sunday"/>
+
+        </LinearLayout>
+
+    </LinearLayout>-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:padding="10dp"
+        >
+
+        <ImageView
+            android:id="@+id/lock_type_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:src="@{lock.type==AppCode.LOCK_TYPE_FORBIDDEN ? @color/red : @color/green}"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/lock_type_icon"
+            android:gravity="center"
+            android:text="@{lockFragmentModel.lockTimeToString(lock)}"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/lock_type_icon"
+            android:gravity="center"
+            android:text="@{lockFragmentModel.lockRepeatToString(lock)}"
+            />
+
+    </RelativeLayout>
+
+</layout>

@@ -1,6 +1,7 @@
 package com.ruiaa.timelock.monitor.model.sqlite;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -25,6 +26,21 @@ public class DataComSqlite implements DataCom {
             synchronized (DataComSqlite.class) {
                 if (instance == null) {
                     instance = new DataComSqlite();
+                }
+            }
+        }
+        return instance;
+    }
+
+    private DataComSqlite(Context context){
+        sqLiteDatabase=new CreateSql(context).getWritableDatabase();
+    }
+
+    public static DataComSqlite getInstance(Context context) {
+        if(instance==null) {
+            synchronized (DataComSqlite.class) {
+                if (instance == null) {
+                    instance = new DataComSqlite(context);
                 }
             }
         }

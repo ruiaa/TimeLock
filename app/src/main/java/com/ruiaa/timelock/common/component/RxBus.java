@@ -1,5 +1,7 @@
 package com.ruiaa.timelock.common.component;
 
+import java.util.concurrent.TimeUnit;
+
 import rx.Observable;
 import rx.subjects.PublishSubject;
 import rx.subjects.SerializedSubject;
@@ -29,6 +31,14 @@ public class RxBus {
     // 提供了一个新的事件
     public void post(Object o) {
         bus.onNext(o);
+    }
+
+    public void postDelay(Object o,long millisecond){
+        Observable.just(1)
+                .delay(millisecond, TimeUnit.MILLISECONDS)
+                .subscribe(i->{
+                    bus.onNext(o);
+                });
     }
 
     // 根据传递的 eventType 类型返回特定类型(eventType)的 被观察者

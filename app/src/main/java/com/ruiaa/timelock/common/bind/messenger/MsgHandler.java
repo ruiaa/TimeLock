@@ -1,4 +1,4 @@
-package com.ruiaa.timelock.common.bind;
+package com.ruiaa.timelock.common.bind.messenger;
 
 import android.os.Message;
 

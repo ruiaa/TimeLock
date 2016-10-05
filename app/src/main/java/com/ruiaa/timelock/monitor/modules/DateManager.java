@@ -38,7 +38,7 @@ public class DateManager {
             //增加dateToday列
             try {
                 dataCom.execSQL("alter table " + SqlField.TABLE_APP_INFO +
-                        " add " + todayDate + " integer not null default 0 ");
+                        " add '" + todayDate + "' integer not null default 0 ");
 
                 MonitorService.TodayDate = todayDate;
                 (new SPUtils(App.getAppContext(),MonitorService.SPFileName)).putString(ConfigCode.DATE_TODAY,todayDate);

@@ -1,7 +1,6 @@
 package com.ruiaa.timelock.monitor.model.sqlite;
 
 import android.content.Context;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -17,16 +16,15 @@ public class CreateSql extends SQLiteOpenHelper {
     // 数据库版本号
     public static final int DATABASE_VERSION = 1;
 
-    public CreateSql(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
-    }
-
-    public CreateSql(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, DatabaseErrorHandler errorHandler) {
-        super(context, name, factory, version, errorHandler);
-    }
 
     public CreateSql() {
         super(App.getAppContext(), SqlField.DATABASE_NAME, null,DATABASE_VERSION);
+        // 数据库实际被创建是在getWritableDatabase()或getReadableDatabase()方法调用时
+        // CursorFactory设置为null,使用系统默认的工厂类
+    }
+
+    public CreateSql(Context context) {
+        super(context, SqlField.DATABASE_NAME, null,DATABASE_VERSION);
         // 数据库实际被创建是在getWritableDatabase()或getReadableDatabase()方法调用时
         // CursorFactory设置为null,使用系统默认的工厂类
     }
