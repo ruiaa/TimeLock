@@ -54,8 +54,12 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<BaseRecycle
     public void onBindViewHolder(BindingHolder holder, int position) {
         final T model = list.get(position);
 
-        itemDataBinding.bindData(holder,position,model);
-        itemListenerBinding.bindListener(holder,position,model);
+        if (itemDataBinding!=null){
+            itemDataBinding.bindData(holder,position,model);
+        }
+        if (itemListenerBinding!=null){
+            itemListenerBinding.bindListener(holder,position,model);
+        }
 
         holder.getBinding().executePendingBindings();
     }

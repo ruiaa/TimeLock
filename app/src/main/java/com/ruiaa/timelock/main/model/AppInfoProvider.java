@@ -7,7 +7,6 @@ import com.ruiaa.timelock.common.consts.AppCode;
 import com.ruiaa.timelock.common.consts.SqlField;
 import com.ruiaa.timelock.common.utils.DataConvert;
 import com.ruiaa.timelock.common.utils.LogUtil;
-import com.ruiaa.timelock.common.utils.Pair;
 import com.ruiaa.timelock.main.entity.AppInfo;
 import com.ruiaa.timelock.main.entity.Lock;
 import com.ruiaa.timelock.main.entity.TimeLimit;
@@ -16,6 +15,7 @@ import com.ruiaa.timelock.main.model.cp.DataMainContentResolver;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -165,22 +165,19 @@ public class AppInfoProvider {
         return usage;
     }
 
-    public Pair<List<String>, Map<String, Integer>> getAllAppUsage(int date) {
-        List<String> list = new ArrayList<>();
-        Map<String, Integer> map = new HashMap<>();
+    public Map<String, Integer> getAllAppUsage(int date) {
+        Map<String, Integer> map = new LinkedHashMap<>();
 
-        String[] strs = {SqlField.PACKAGE, String.valueOf(date)};
+        String[] strs = {SqlField.PACKAGE, "["+String.valueOf(date)+"]"};
         Cursor cursor = null;
         try {
             cursor = dataMain.query(SqlField.TABLE_APP_INFO, strs,
-                    String.valueOf(date) + ">0", null, String.valueOf(date) + " desc");
+                    "["+String.valueOf(date) + "] >0", null, "["+String.valueOf(date) + "] desc");
 
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     String pkg = cursor.getString(cursor.getColumnIndex(SqlField.PACKAGE));
-                    list.add(pkg);
-                    map.put(pkg, cursor.getInt(cursor.getColumnIndex(String.valueOf(date)))
-                    );
+                    map.put(pkg, cursor.getInt(cursor.getColumnIndex(String.valueOf(date))));
                 } while (cursor.moveToNext());
             }
         } catch (Exception e) {
@@ -190,7 +187,7 @@ public class AppInfoProvider {
                 cursor.close();
             }
         }
-        return new Pair<List<String>, Map<String, Integer>>(list, map);
+        return map;
     }
 
     public Map<Integer, Integer> getTheAppAllUsage(String pkg) {

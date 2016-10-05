@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
+import com.ruiaa.timelock.R;
 import com.ruiaa.timelock.common.base.App;
 
 import java.io.ByteArrayOutputStream;
@@ -52,17 +53,30 @@ public class DataConvert {
      *20:07:23  -->200723=20*10000+7*100+23
      */
     public static int time(Calendar calendar) {
-        return calendar.get(Calendar.HOUR_OF_DAY) * 10000
-                + calendar.get(Calendar.MINUTE) * 100
+        return calendar.get(Calendar.HOUR_OF_DAY) * 60 * 60
+                + calendar.get(Calendar.MINUTE) * 60
                 + calendar.get(Calendar.SECOND);
     }
 
     public static int time(int hour, int minute, int second) {
-        return hour * 10000 + minute * 100 + second;
+        return hour * 60 * 60 + minute * 60 + second;
     }
 
     public static String time(int time) {
-        return String.valueOf(time / 10000) + ":"
-                + String.valueOf((time % 10000) / 100);
+        return String.valueOf(time / 3600) + ":"
+                + String.valueOf((time % 3600) / 60);
+    }
+
+    public static String timeToMinute(int time) {
+        StringBuilder builder = new StringBuilder();
+        int i = time / 3600;
+        if (i != 0) {
+            builder.append(i);
+            builder.append(ResUtil.getString(R.string.hour));
+        }
+        i = (time % 3600) / 60;
+        builder.append(i);
+        builder.append(ResUtil.getString(R.string.minute));
+        return builder.toString();
     }
 }

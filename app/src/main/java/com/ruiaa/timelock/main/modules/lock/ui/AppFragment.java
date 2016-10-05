@@ -43,7 +43,7 @@ public class AppFragment extends BaseFragment {
         BaseRecyclerViewAdapter<AppInfo> baseRecyclerViewAdapter = appFragmentModel.getAdapter();
         baseRecyclerViewAdapter.setItemListenerBinding((holder, position, model) -> {
             holder.getBinding().getRoot().setOnClickListener(v -> {
-                ((LockActivity)getActivity()).openFragment(AppFragment.this, LockFragment.newInstance(model.getPackageName()));
+                ((LockActivity)getActivity()).openNewFragment(AppFragment.this, LockFragment.newInstance(model.getPackageName()));
             });
         });
 

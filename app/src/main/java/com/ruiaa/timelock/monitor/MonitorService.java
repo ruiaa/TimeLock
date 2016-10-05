@@ -74,6 +74,7 @@ public class MonitorService extends BaseService {
 
     @Override
     public void onDestroy() {
+        usageRecord.saveAll();
         super.onDestroy();
         Intent startService = new Intent(App.getAppContext(), MonitorService.class);
         startService(startService);
@@ -162,7 +163,7 @@ public class MonitorService extends BaseService {
         Runnable updateR = updateR = () -> {
             appManager.updateApp();
             usageRecord.saveAll();
-            LogUtil.d("update--");
+            LogUtil.d("updateApp,saveAll--");
         };
         scheduleUpdate.scheduleAtFixedRate(updateR, 0, 10L, TimeUnit.MINUTES);
     }

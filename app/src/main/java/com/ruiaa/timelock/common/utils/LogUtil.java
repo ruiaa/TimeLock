@@ -36,14 +36,13 @@ public class LogUtil {
 
     public static void w(String msg ,Exception e){
         if (USE_LOG){
-            Log.w(USER_NAME+getClassName(),msg);
-            e.printStackTrace();
+            Log.w(USER_NAME+getClassName(),msg+e.getMessage());
         }
     }
 
     public static void e(String msg ,Exception e){
         if (USE_LOG){
-            Log.e(USER_NAME+getClassName(),msg);
+            Log.e(USER_NAME+getClassName(),msg+e.getMessage());
             e.printStackTrace();
         }
     }

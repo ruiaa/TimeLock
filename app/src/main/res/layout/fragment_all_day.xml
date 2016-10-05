@@ -4,6 +4,7 @@
              android:layout_height="match_parent"
              tools:context="com.ruiaa.timelock.main.modules.usage.ui.AllDayFragment">
 
+
     <android.support.v4.view.ViewPager
         android:id="@+id/pager_all_day"
         android:layout_width="match_parent"

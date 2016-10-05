@@ -33,7 +33,7 @@ public class UsageRecord {
     public void record(String pkg) {
         if (pkg != null) {
             if (usages.containsKey(pkg)) {
-                float usage = usages.get(pkg) + MonitorService.Monitor_Interval;
+                float usage = usages.get(pkg)+ MonitorService.Monitor_Interval;
                 usages.put(pkg, usage);
             } else {
                 usages.put(pkg, MonitorService.Monitor_Interval);
@@ -49,7 +49,7 @@ public class UsageRecord {
         if(!usages.isEmpty()) {
             Cursor cursor = null;
             ContentValues contentValues;
-            String[] strings = {SqlField.PACKAGE, MonitorService.TodayDate};
+            String[] strings = {SqlField.PACKAGE, "["+MonitorService.TodayDate+"]"};
             try {
 
                 for (Map.Entry<String, Float> usage : usages.entrySet()) {
@@ -59,12 +59,13 @@ public class UsageRecord {
                     if (cursor != null && cursor.moveToFirst()) {
                         int oldTime = cursor.getInt(cursor.getColumnIndex(MonitorService.TodayDate));
                         contentValues = new ContentValues();
-                        contentValues.put(MonitorService.TodayDate, usage.getValue().intValue() + oldTime);
+                        contentValues.put("["+MonitorService.TodayDate+"]", usage.getValue().intValue() + oldTime);
                         dataCom.update(SqlField.TABLE_APP_INFO, contentValues,
                                 SqlField.PACKAGE + "='" + usage.getKey() + "'", null);
                     }
                 }
-
+                usages.clear();
+                LogUtil.i("saveAll--");
             } catch (Exception e) {
                 LogUtil.e("saveAll#", e);
             } finally {

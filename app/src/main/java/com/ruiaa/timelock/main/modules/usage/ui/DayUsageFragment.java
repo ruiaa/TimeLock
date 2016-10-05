@@ -10,16 +10,16 @@ import com.ruiaa.timelock.R;
 import com.ruiaa.timelock.common.base.BaseFragment;
 
 
-public class DayUsagePager extends BaseFragment {
+public class DayUsageFragment extends BaseFragment {
 
     private static final String DATE_CODE="date";
 
-    public DayUsagePager() {
+    public DayUsageFragment() {
         // Required empty public constructor
     }
 
-    public static DayUsagePager newInstance(int date) {
-        DayUsagePager fragment = new DayUsagePager();
+    public static DayUsageFragment newInstance(int date) {
+        DayUsageFragment fragment = new DayUsageFragment();
         Bundle bundle=new Bundle();
         bundle.putInt(DATE_CODE,date);
         fragment.setArguments(bundle);

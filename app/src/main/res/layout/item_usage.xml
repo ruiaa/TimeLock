@@ -4,6 +4,7 @@
     >
 
     <data>
+        <import type="com.ruiaa.timelock.common.utils.DataConvert"/>
         <variable
             name="usageApp"
             type="com.ruiaa.timelock.main.entity.AppInfo"
@@ -33,6 +34,16 @@
             android:src="@{usageApp.icon}"
             />
 
+        <com.ruiaa.timelock.main.modules.usage.ui.UsageLengthView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_toRightOf="@+id/item_usage_icon"
+            android:layout_centerVertical="true"
+            android:background="@color/green"
+            app:thisUsage="@{usageTime}"
+            app:maxUsage="@{maxUsageTime}"
+            />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,18 +57,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="@{String.valueOf(usageTime)}"
+            android:text="@{DataConvert.timeToMinute(usageTime)}"
             />
-
-        <com.ruiaa.timelock.main.modules.usage.ui.UsageLengthView
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_toRightOf="@+id/item_usage_icon"
-            android:layout_centerVertical="true"
-            android:background="@color/green"
-            app:thisUsage="@{usageTime}"
-            app:maxUsage="@{maxUsageTime}"
-         />
 
 
     </RelativeLayout>

@@ -14,9 +14,17 @@ public class UsageLengthView extends View {
     private int thisUsage=0;
 
 
+    public UsageLengthView(Context context) {
+        super(context);
+    }
+
+    public UsageLengthView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
     public UsageLengthView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs);
+        super(context, attrs, defStyleAttr);
+        //super(context, attrs);
         //TypedArray typedArray=context.obtainStyledAttributes(attrs, R.styleable.item_usage_length);
         //maxUsage=typedArray.getInt(R.styleable.item_usage_length_maxUsage,0);
         //thisUsage=typedArray.getInt(R.styleable.item_usage_length_thisUsage,0);
@@ -28,7 +36,7 @@ public class UsageLengthView extends View {
         if (thisUsage==0||maxUsage==0){
             setMeasuredDimension(0,0);
         }else {
-            setMeasuredDimension((int)(MeasureSpec.getSize(widthMeasureSpec)*(thisUsage/maxUsage)), MeasureSpec.getSize(heightMeasureSpec));
+            setMeasuredDimension((int)(MeasureSpec.getSize(widthMeasureSpec)*((double)thisUsage/(double)maxUsage)), MeasureSpec.getSize(heightMeasureSpec));
         }
     }
 

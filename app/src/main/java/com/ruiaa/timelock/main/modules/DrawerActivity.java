@@ -1,8 +1,12 @@
 package com.ruiaa.timelock.main.modules;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -30,9 +34,12 @@ public class DrawerActivity extends BaseActivity {
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
 
+    protected FragmentManager fragmentManager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fragmentManager=this.getFragmentManager();
         setContentView(R.layout.activity_main);
         getView();
         initDrawer();
@@ -96,7 +103,6 @@ public class DrawerActivity extends BaseActivity {
     }
 
     private void initToolbar(){
-        setToolbarTitle(toolbar);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
@@ -104,9 +110,13 @@ public class DrawerActivity extends BaseActivity {
         toggle.syncState();
     }
 
-    public void setToolbarTitle(Toolbar toolbar){
+    public void setToolbarTitle(String s){
+        getSupportActionBar().setTitle(s);
     }
 
+    public void setToolbarTitle(@StringRes int id){
+        getSupportActionBar().setTitle(id);
+    }
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -120,7 +130,30 @@ public class DrawerActivity extends BaseActivity {
         }
     }
 
+    public void openNewFragment(Fragment thisFragment, Fragment newFragment) {
+        FragmentTransaction fragmentTransaction;
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.detach(thisFragment);
+        fragmentTransaction.add(R.id.fragment_main, newFragment);
+        //???fragmentTransaction.replace(R.id.fragment_main,newFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    public void reShow(Fragment fragment) {
+        FragmentTransaction fragmentTransaction;
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.detach(fragment);
+        fragmentTransaction.attach(fragment);
+        fragmentTransaction.commit();
+    }
+
     public boolean fragmentTurnBack() {
-        return false;
+        if(fragmentManager.getBackStackEntryCount()!=0){
+            fragmentManager.popBackStack();
+            return true;
+        }else {
+            return false;
+        }
     }
 }
