@@ -14,7 +14,7 @@
 ###	MVVM实践
 +	main
 	+	entity	所有封装数据的实体
-	+	event	+Rubus 传递消息
+	+	event	+RxBus 传递消息
 	+	model	从后台获取数据
 	+	modules	根据界面功能划分模块(View+ViewModel) 
 
