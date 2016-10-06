@@ -1,6 +1,7 @@
 package com.ruiaa.timelock.main.modules.usage.ui;
 
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import com.ruiaa.timelock.R;
 import com.ruiaa.timelock.common.base.BaseFragment;
 import com.ruiaa.timelock.common.utils.DataConvert;
 import com.ruiaa.timelock.common.utils.ResUtil;
+import com.ruiaa.timelock.databinding.FragmentAllDayBinding;
 import com.ruiaa.timelock.main.modules.usage.viewmodel.AllDayModel;
 
 
@@ -38,10 +40,11 @@ public class AllDayFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_all_day, container, false);
+        FragmentAllDayBinding fragmentAllDayBinding= DataBindingUtil.inflate(inflater,R.layout.fragment_all_day,container,false);
+        View view=fragmentAllDayBinding.getRoot();
 
         ViewPager viewPager=(ViewPager)view.findViewById(R.id.pager_all_day);
-        viewPager.setAdapter(allDayModel.getAllDayPagerAdapter());
+        viewPager.setAdapter(new AllDayAdapter(allDayModel,this));
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -62,9 +65,11 @@ public class AllDayFragment extends BaseFragment {
         return view;
     }
 
+
     @Override
     public void onDestroy() {
         allDayModel.destroy();
+        allDayModel=null;
         super.onDestroy();
     }
 }

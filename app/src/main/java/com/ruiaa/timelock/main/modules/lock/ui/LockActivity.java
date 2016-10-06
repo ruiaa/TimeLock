@@ -23,13 +23,14 @@ public class LockActivity extends DrawerActivity {
             FragmentTransaction transaction=fragmentManager.beginTransaction();
             transaction.add(R.id.fragment_main,appFragment);
             transaction.commit();
+
+            if (Build.VERSION.SDK_INT>=21){
+                AppUtils.getUsagePermission(this);
+            }
         }
 
         setToolbarTitle(ResUtil.getString(R.string.lock));
 
-        if (Build.VERSION.SDK_INT>=21){
-            AppUtils.getUsagePermission(this);
-        }
         LogUtil.i("onCreate#");
     }
 

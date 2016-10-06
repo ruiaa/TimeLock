@@ -56,5 +56,11 @@
 			+	??在constructor传入View，在adapter内调用View的方法设置监听器
 			+	??adapter内部定义并调用监听器接口，在View内实现并设置接口
 	
+	+	? 归为ViewModel层
+		+	只绑定xxxModel，绑定只涉及xxxModel修改数据的监听器
+		+	显示交给Xml，视图变换监听器通过接口交给View
 
+7.	View与ViewModel线程切换
+	+	ViewModel只处理数据，同步获取数据，不关心线程问题
+	+	View认为调用的ViewModel方法可能耗时长，可通过Rx切换线程异步调用
 
